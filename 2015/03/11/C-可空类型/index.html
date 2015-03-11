@@ -135,7 +135,7 @@
 <p>当我们要添加<code>DeathDate</code>属性时,呃…..现在问题来了!<br><a id="more"></a><br>挖掘机….噢,不,死亡日期。<br>并不是每个人都有死亡日期啊!要是把<code>DeathDate</code>也写成跟上面一样<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public DateTime DeathDate &#123; set; get; &#125;</span><br></pre></td></tr></table></figure></p>
 <p>这也太扯淡了,难道要给活人一个死亡日期么!人家那时候还活着怎么办!(╭( ′• o •′ )╭☞警察叔叔！就是这个人！)<br>当然,除非我们在做的是殡仪馆的系统(╯°□°）╯︵ ┻━┻<br>那我们该怎么处理这个DeathDate呢?</p>
 <h2 id="可空类型的基本使用">可空类型的基本使用</h2><h3 id="神一样的问号">神一样的问号</h3><p><strong>是时候让我们的可空类型登场了!(此处应有掌声)</strong><br>要处理这个看似复杂的问题,我们只需要一个小小的问号!<br><strong>只需要在DateTime后面加一个’?’!</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public DateTime? DeathDate &#123; set; get; &#125;</span><br></pre></td></tr></table></figure></p>
-<p>我觉的这绝对是个相当形象的符号。<strong>加了这个<code>?</code>,便代表这个类型声明的变量是可为空的,也就是可以把一个<code>null</code>值赋值给他。现在,我们可以为DeathDate赋一个实际的值,也可以设置其为<code>null</code></strong>。<br>下面,我们来实际操作一下可空类型</p>
+<p>我觉的这绝对是个相当形象的符号。<strong>加了这个<code>?</code>,便代表这个类型声明的变量是可为空的,也就是可以把一个<code>null</code>值赋值给他。现在,我们可以为DeathDate赋一个实际的值,也可以设置其为<code>null</code></strong>。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person alivePerson = new Person();&#10;Person deathPerson = new Person();&#10;&#10;alivePerson.DeathDate = null;&#10;deathPerson.DeathDate = DateTime.Now;</span><br></pre></td></tr></table></figure></p>
 <h3 id="摘掉面具的问号——Nullable&lt;T&gt;">摘掉面具的问号——<code>Nullable&lt;T&gt;</code></h3><p>实际上,这个<code>?</code>操作符是<code>Nullable&lt;T&gt;</code>的一个语法糖,它是一个泛型类型,并且类型参数T有一个值类型约束(要解释类型约束和泛型需要还长好长的内容,所以不理解的同学可以先自行google,<strong>不严格的说,T可以代表任何类型,但加了值类型约束后T只可以是值类型</strong>)。所以,<strong><code>?</code>操作符也只能用在如int,double,DateTime这些值类型上(ps:包括struct),而绝对不可以用在引用类型,如string,object</strong>(人家本身就可以设置为null好不好- -||)</p>
 <p><code>Nullable&lt;T&gt;</code>有两个很重要的属性<code>Value</code>,<code>HasValue</code></p>
 <blockquote>
@@ -143,7 +143,6 @@
 <p>Vlaue具有和T相同的类型,如果HasValue为true,那么Value就是这个值,反之,则会抛出一个InvalidOperationException异常</p>
 </blockquote>
 <p>这两个属性很直观,看名字就能理解是干什么用的<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int? x = 10;&#10;if (x.HasValue)&#10;&#123;&#10;    System.Console.WriteLine(x.Value);&#10;&#125;&#10;else&#10;&#123;&#10;    System.Console.WriteLine(&#34;Undefined&#34;);&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<p><img src="./IMG_0489.JPG" alt="Alt text"></p>
 <h3 id="空合并操作符">空合并操作符</h3><p>空操作符也是个神奇的操作符,他看起来很像可空类型的参数,因为它有两个问号,即<code>??</code><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int? a=2;&#10;int? b=null;&#10;b=a??1;</span><br></pre></td></tr></table></figure></p>
 <p>如果a为非空,则返回b=a的值,否则,b=1;<br>值得一提的是,这个操作符具有右结合性,即<code>a??b??c</code>相当于<code>a??(b??c)</code></p>
 <h2 id="总结">总结</h2><p>可空类型是个相当实用的特性,它适用于所有C#2(VS2005)以上的版本,适度的使用可空类型,可使代码变得优雅。</p>
