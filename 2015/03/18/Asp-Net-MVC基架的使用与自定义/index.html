@@ -29,7 +29,7 @@
 
 
 
-  <title> 开始 // 会写代码的鱼 </title>
+  <title> Asp.Net MVC基架的使用与自定义 // 会写代码的鱼 </title>
   
 </head>
 
@@ -101,7 +101,7 @@
           
           
             
-              开始
+              Asp.Net MVC基架的使用与自定义
             
           
         </h1>
@@ -110,15 +110,15 @@
       <div class="post-meta">
           <span class="post-time">
             
-              发表于 2014-10-22
+              发表于 2015-03-18
             
           </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2014/10/22/开始/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2014/10/22/开始/"></span>
+            <a href="/2015/03/18/Asp-Net-MVC基架的使用与自定义/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/18/Asp-Net-MVC基架的使用与自定义/"></span>
             </a>
           </span>
           
@@ -133,7 +133,19 @@
         
 
         
-          <p>又换了一个Blog。<br>零零整整换了好多个，一个都没能坚持下来，都是三分钟热度居多。<br>这次开了Hexo，说实话其实主要是因为被它的界面吸引了，对，我就是画面党！<br>希望这次能坚持下来吧，真的是有好多东西需要总结了。</p>
+          <p>在日常开发中,Asp.Net MVC所提供的的基架(Scaffold)功能可以让我们方便的构建CRUD应用。本篇文章将介绍如何使用基架与自定义基架的T4模板<br><a id="more"></a></p>
+<h2 id="基架的基本使用">基架的基本使用</h2><h3 id="什么是基架">什么是基架</h3><p>基架是Asp.Net提供的一套代码生成框架,Visual Studio 2013(博主的版本是update4)提供了一套预定义的T4模板以供快速的生成CRUD页面。对MVC应用来讲,主要生成的是控制器(Controller)和View层代码</p>
+<h3 id="基架的使用方法">基架的使用方法</h3><p>我们先新建一个Asp.Net Mvc(5)项目,VS自动生成的解决方案如下:<br>    <img src="http://i2.tietuku.com/5dfabe514b24b0fe.png" alt="解决方案"></p>
+<p>在<code>Models</code>文件夹添加一个<code>Person</code>类(原谅我一直懒得想个新类)<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">using System;&#10;using System.Collections.Generic;&#10;using System.Linq;&#10;using System.Web;&#10;using System.ComponentModel.DataAnnotations;&#10;&#10;namespace ScoffoldTest.Models&#10;&#123;&#10;    public class Person&#10;    &#123;&#10;        public int PersonID &#123; get; set; &#125;&#10;        [Display(Name=(&#34;&#22995;&#21517;&#34;))]&#10;        [MaxLength(16,ErrorMessage=&#34;&#24744;&#25152;&#36755;&#20837;&#30340;&#22995;&#21517;&#36807;&#38271;&#34;)]&#10;        public string Name &#123; get; set; &#125;&#10;&#10;        [Display(Name=(&#34;&#24180;&#40836;&#34;))]&#10;        public int Age &#123; get; set; &#125;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是一个很简单类,我们所添加的数据注解也很容易理解,接下来,让我们使用基架来自动生成Controller和View<br>在<code>Controller</code>文件夹上右击,选择<code>ADD</code>    -&gt;<code>New Scaffolded item</code>-&gt;选择<code>MVC5 Controller with views,using EntityFramework</code>(在此之前记得生成一下解决方案)<br>在弹出的窗口中进行如下配置<br><img src="http://i3.tietuku.com/869151b6e8458d44.png" alt="Create Controller"><br>点击Add按钮,大功告成!<br>我们可以很直观的看到,编译器为我们自动添加了一个PeopleController以及四个cshtml文件<br><img src="http://i3.tietuku.com/714cddf69ef1a17c.png" alt="Scaffolded"><br>我们可以在浏览器查看一下:<br><img src="http://i3.tietuku.com/c2056fc8e85b48a9.png" alt="Index Page"><br>由于我们没有准备种子数据,所以页面加载时没有任何数据,我们可以点击<strong>Create New</strong>新建Person</p>
+<p><img src="http://i3.tietuku.com/504c194a7f471d14.png" alt="Create Page"><br>我们可以看到,我们的数据注解也起到了作用!<br><img src="http://i3.tietuku.com/ce6a5e8e7947a5c3.png" alt="Index Page"><br>目前为止,一切都显得很完美(关于为什么可以保存数据可以查看ef框架code first的相关资料)</p>
+<h2 id="自定义基架">自定义基架</h2><p>这一切都太神奇了有没有?想一想当年为了写一个三层架构的小项目来没完没了的重复劳动,这明显的差距简直让Pomfret感动的流鼻涕啊(Ｔ▽Ｔ)<br>当然这一切还没完,代码生成是有了,但是我们还不能控制啊!起码得改个中文吧!(╯°□°）╯︵ ┻━┻<br>想也不用想,微软大法肯定为我们提供了自定义基架的方法(博主为了多凑几个字也是蛮拼的)</p>
+<p>第一步,我们要找到VS2013预存模板的位置<br><strong>%%VS存放目录%%\Common7\IDE\Extensions\Microsoft\Web\Mvc\Scaffolding\Templates</strong><br><img src="http://i3.tietuku.com/d5ac9b7c402ce7ad.png" alt="File Location"><br>如图所示这里有多个模板,我们只需要选取我们需要的即可<br>在这里我们复制<strong>MvcView</strong>和<strong>MvcControllerWithContext</strong>文件夹<br>让我们先回到Visual Studio,我们们需要在解决方案下新建一个名为<strong>CodeTemplates</strong>的文件夹</p>
+<p><strong><em>使用基架进行代码生成时,编译器会先检查解决方案的CodeTemplates文件夹,如果该文件夹有匹配的基架,则使用该模板进行生成,如果为查找到该文件夹或者文件夹内没有匹配的基架,则使用默认模板</em></strong></p>
+<p>所以我们现在应该做的就是把我们刚刚复制的两个文件夹粘贴到该文件夹下, 并且移除不需要的文件(这里我们移除.vb文件)<br><img src="http://i3.tietuku.com/5839c996a0c61935.png" alt="code Templates"><br>这些以<strong>.t4</strong>结尾的就是我们所说的t4模板文件了(关于t4,可以看博客园的这篇文章<a href="http://www.cnblogs.com/lzrabbit/archive/2012/07/15/2591085.html" target="_blank" rel="external">T4模版引擎之基础入门—懒惰的肥兔</a>)<br>我们可以通过编辑这些模板来达到自定义基架的效果(vs本身是不支持t4代码的高亮的,我们可以下载VS插件<a href="http://www.devart.com/" target="_blank" rel="external">Devart  T4 Editor</a>进行编辑)<br>作为示例,我们这里修改一下<strong>List.cs.t4</strong>:<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#31532;48&#34892;&#10; @Html.ActionLink(&#34;&#26032;&#24314;&#34;, &#34;Create&#34;)&#10; //97&#34892;&#10; &#60;td&#62;&#10;           @Html.ActionLink(&#34;&#20462;&#25913;&#34;, &#34;Edit&#34;, new &#123; id=item.&#60;#= pkName #&#62; &#125;) |&#10;           @Html.ActionLink(&#34;&#35814;&#32454;&#34;, &#34;Details&#34;, new &#123; id=item.&#60;#= pkName #&#62; &#125;) |&#10;           @Html.ActionLink(&#34;&#21024;&#38500;&#34;, &#34;Delete&#34;, new &#123; id=item.&#60;#= pkName #&#62; &#125;)&#10;     &#60;/td&#62;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以重新一下添加基架,只需要保持Controller名不变便可以覆盖上一次所生成的文件<br>我们运行一下工程可以发现一切都是我们所预期的那样<br><img src="http://i3.tietuku.com/725c7da36390f555.png" alt="Index Page"></p>
+<h2 id="总结">总结</h2><p>对于小项目来说,Scaffold无疑是一把利器,对于稍微大一点的项目,Scaffold所起到的帮助还是很微不足道,所以是否在项目中使用基架还是要理智选择</p>
+<h2 id="参考">参考</h2><p><a href="https://msdn.microsoft.com/en-us/magazine/dn745864.aspx" target="_blank" rel="external">Override the Default Scaffold Templates—MSDN</a></p>
 
         
 
@@ -145,12 +157,24 @@
         
           <div class="post-tags">
             
-              <a href="/tags/杂事/">
-                #杂事
+              <a href="/tags/net/">
+                #.net
               </a>
             
-              <a href="/tags/生活/">
-                #生活
+              <a href="/tags/Asp-net/">
+                #Asp.net
+              </a>
+            
+              <a href="/tags/Scaffold/">
+                #Scaffold
+              </a>
+            
+              <a href="/tags/c/">
+                #c#
+              </a>
+            
+              <a href="/tags/基架/">
+                #基架
               </a>
             
           </div>
@@ -168,8 +192,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2014/10/22/开始/"
-             data-title="开始" data-url="http://yoursite.com/2014/10/22/开始/">
+        <div class="ds-thread" data-thread-key="2015/03/18/Asp-Net-MVC基架的使用与自定义/"
+             data-title="Asp.Net MVC基架的使用与自定义" data-url="http://yoursite.com/2015/03/18/Asp-Net-MVC基架的使用与自定义/">
         </div>
 
       
@@ -249,7 +273,7 @@
 
     
       <div class="post-toc sidebar-panel-active">
-        
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基架的基本使用"><span class="nav-number">1.</span> <span class="nav-text">基架的基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是基架"><span class="nav-number">1.1.</span> <span class="nav-text">什么是基架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基架的使用方法"><span class="nav-number">1.2.</span> <span class="nav-text">基架的使用方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义基架"><span class="nav-number">2.</span> <span class="nav-text">自定义基架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol>
       </div>
     
   </div>
